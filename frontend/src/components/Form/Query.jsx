@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Button from "../Button/Button";
 import InputBox from "../InputBox/InputBox";
+import TextArea from "../TextArea/TextArea";
 import FormCard from "../FormCard/FormCard";
 
-export default function LoginForm() {
+export default function QueryForm() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    password: "",
+    query: "",
   });
 
   const handleChange = (e) => {
@@ -18,32 +20,32 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log("Query:", formData);
   };
 
   return (
-    <FormCard title="Welcome Back">
+    <FormCard title="Ask a Query">
       <form onSubmit={handleSubmit} className="space-y-5">
+
         <InputBox
-          type="email"
-          label="Email Address"
-          name="email"
-          value={formData.email}
+          label="Query Title"
+          name="querytitle"
+          value={formData.querytitle}
           onChange={handleChange}
           required
         />
 
-        <InputBox
-          type="password"
-          label="Password"
-          name="password"
-          value={formData.password}
+
+        <TextArea
+          label="Your Query"
+          name="query"
+          value={formData.query}
           onChange={handleChange}
           required
         />
 
-        <Button type="submit" variant="login">
-          Login
+        <Button type="submit" variant="secondary">
+          Submit Query
         </Button>
       </form>
     </FormCard>

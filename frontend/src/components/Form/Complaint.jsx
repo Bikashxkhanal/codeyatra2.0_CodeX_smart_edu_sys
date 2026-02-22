@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Button from "../Button/Button";
 import InputBox from "../InputBox/InputBox";
+import TextArea from "../TextArea/TextArea";
 import FormCard from "../FormCard/FormCard";
 
-export default function LoginForm() {
+export default function ComplaintForm() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    password: "",
+    subject: "",
+    message: "",
   });
 
   const handleChange = (e) => {
@@ -18,32 +21,30 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log("Complaint:", formData);
   };
 
   return (
-    <FormCard title="Welcome Back">
+    <FormCard title="Submit Complaint">
       <form onSubmit={handleSubmit} className="space-y-5">
         <InputBox
-          type="email"
-          label="Email Address"
-          name="email"
-          value={formData.email}
+          label="Subject"
+          name="subject"
+          value={formData.subject}
           onChange={handleChange}
           required
         />
 
-        <InputBox
-          type="password"
-          label="Password"
-          name="password"
-          value={formData.password}
+        <TextArea
+          label="Complaint Message"
+          name="message"
+          value={formData.message}
           onChange={handleChange}
           required
         />
 
-        <Button type="submit" variant="login">
-          Login
+        <Button type="submit" variant="delete">
+          Submit Complaint
         </Button>
       </form>
     </FormCard>

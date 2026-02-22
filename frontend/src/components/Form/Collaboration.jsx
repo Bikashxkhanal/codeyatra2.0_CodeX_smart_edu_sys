@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Button from "../Button/Button";
 import InputBox from "../InputBox/InputBox";
+import TextArea from "../TextArea/TextArea";
 import FormCard from "../FormCard/FormCard";
 
-export default function LoginForm() {
+export default function CollaborationForm() {
   const [formData, setFormData] = useState({
+    company: "",
+    contactPerson: "",
     email: "",
-    password: "",
+    proposal: "",
   });
 
   const handleChange = (e) => {
@@ -18,32 +21,31 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log("Collaboration:", formData);
   };
 
   return (
-    <FormCard title="Welcome Back">
+    <FormCard title="Collaboration Request">
       <form onSubmit={handleSubmit} className="space-y-5">
+
         <InputBox
-          type="email"
-          label="Email Address"
-          name="email"
-          value={formData.email}
+          label="Collaboration Title"
+          name="collaboration Title"
+          value={formData.collaborationtitle}
           onChange={handleChange}
           required
         />
 
-        <InputBox
-          type="password"
-          label="Password"
-          name="password"
-          value={formData.password}
+        <TextArea
+          label="Proposal"
+          name="proposal"
+          value={formData.proposal}
           onChange={handleChange}
           required
         />
 
-        <Button type="submit" variant="login">
-          Login
+        <Button type="submit" variant="primary">
+          Send Proposal
         </Button>
       </form>
     </FormCard>
