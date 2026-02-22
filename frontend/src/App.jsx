@@ -1,17 +1,30 @@
 import { useState } from 'react'
-// import LoginForm from './components/Form/LoginForm'
-// import COLLABORATION from './components/Form/Collaboration'
+import LoginForm from './components/Form/LoginForm'
 // import COMPLAINT from './components/Form/Complaint'
 // import NOTICE from './components/Form/Notice'
 import QUERY from './components/Form/Query'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import CollaborationForm from './components/Form/Collaboration';
+
+const router = createBrowserRouter([
+  {
+    path : '', 
+    element : <LoginForm />
+  },
+
+  {
+    path : '/collaboration' , 
+    element : <CollaborationForm />
+  }
+])
 
 function App() {
 
 
   return (
     <>
-   <div className='text-center text-4xl text-blue-600'>Codex | Smart Education system</div>
-   <QUERY/>
+    <RouterProvider router={router} >
+   </RouterProvider>
    </>
   )
 }
