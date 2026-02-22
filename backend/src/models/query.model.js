@@ -4,6 +4,7 @@ const querySchema = new Schema(
     {
         owner : {
             type : Schema.Types.ObjectId,
+            ref : "User",
             required : true,
         }, 
          title : {
@@ -19,6 +20,7 @@ const querySchema = new Schema(
     responseders : [
         {
             type : Schema.Types.ObjectId,
+            ref : "User",
         }
     ]
     } 

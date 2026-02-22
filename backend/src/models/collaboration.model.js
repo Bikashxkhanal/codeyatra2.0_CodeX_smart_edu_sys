@@ -4,6 +4,7 @@ import mongoose, { Schema } from "mongoose";
 const collaborationSchema = new Schema({
     owner : {
         type : Schema.Types.ObjectId,
+        ref : "User",
         required : true,
     }, 
     title : {
@@ -17,7 +18,8 @@ const collaborationSchema = new Schema({
     }, 
    collaborators : [
         {
-            type : Schema.Types.ObjectId
+            type : Schema.Types.ObjectId,
+            ref : "User",
         }
    ]
 
