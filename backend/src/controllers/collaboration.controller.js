@@ -1,7 +1,7 @@
-import asyncHandler from "../utils/asyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
-import { ApiError } from "../utils/ApiError";
-import { collaborationModel } from "../models/collaboration.model";
+import asyncHandler from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import { collaborationModel } from "../models/collaboration.model.js";
 import mongoose from "mongoose";
 import {UserModel} from '../models/user.model.js'
 
@@ -106,55 +106,169 @@ const getACollaboration = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, collaboration[0], "Collaboration fetched successfully"));
 });
 
-//receives const { page = 1, limit = 10 } = req.query, must return all the collaborations based on the query, order by the latest createdTime
 const getAllCollaboration = asyncHandler(async (req, res) => {
+
   let { page = 1, limit = 10 } = req.query;
+
   page = parseInt(page);
   limit = parseInt(limit);
 
-  const collaborations = await collaborationModel
-    .find()
-    .sort({ createdAt: -1 })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .populate("owner", "username fullName");
+  if (page < 1) page = 1;
+  if (limit < 1) limit = 10;
 
-  const total = await collaborationModel.countDocuments();
+  const skip = (page - 1) * limit;
+
+  const result = await collaborationModel.aggregate([
+
+    //sorting latest first
+    { $sort: { createdAt: -1 } },
+
+    
+    {
+      $lookup: {
+        from: "users", // make sure this matches your actual users collection name
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner"
+      }
+    },
+    { $unwind: "$owner" },
+
+    //  Selecting  required owner fields only
+    {
+      $project: {
+        title: 1,
+        description: 1,
+        createdAt: 1,
+        owner: {
+          _id: "$owner._id",
+          username: "$owner.username",
+          fullName: "$owner.fullName"
+        }
+      }
+    },
+
+    // Pagination and total count in one query
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [
+          { $skip: skip },
+          { $limit: limit }
+        ]
+      }
+    }
+
+  ]);
+
+  const total = result[0].metadata[0]?.total || 0;
 
   return res.status(200).json(
     new ApiResponse(
       200,
-      { collaborations, page, limit, totalPages: Math.ceil(total / limit) },
+      {
+        collaborations: result[0].data,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        total
+      },
       "Collaborations fetched successfully"
     )
   );
 });
 
-//receives const { page = 1, limit = 10 } = req.query, must return all the collaboration based on the query, check the logged in user, if admin no collaboration, if teacher or students, get all the collaboration, order by the latest createdTime
 const getAllOwnerCollaboration = asyncHandler(async (req, res) => {
+
   let { page = 1, limit = 10 } = req.query;
+
   page = parseInt(page);
   limit = parseInt(limit);
 
+  if (page < 1) page = 1;
+  if (limit < 1) limit = 10;
+
+  const skip = (page - 1) * limit;
+
+ //admin doesnot have any collaboration 
   if (req.user.role === "admin") {
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { collaborations: [] }, "Admins have no collaborations"));
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          collaborations: [],
+          page,
+          limit,
+          totalPages: 0,
+          total: 0
+        },
+        "Admins have no collaborations"
+      )
+    );
   }
 
-  const collaborations = await collaborationModel
-    .find({ owner: req.user._id })
-    .sort({ createdAt: -1 })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .populate("owner", "username fullName");
+  const result = await collaborationModel.aggregate([
 
-  const total = await collaborationModel.countDocuments({ owner: req.user._id });
+    // Matching  owner
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(req.user._id)
+      }
+    },
+
+    // Sorting by latest first
+    { $sort: { createdAt: -1 } },
+
+    // Lookuup owner
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner"
+      }
+    },
+    { $unwind: "$owner" },
+
+    // Projecting only required fields
+    {
+      $project: {
+        title: 1,
+        description: 1,
+        createdAt: 1,
+        owner: {
+          _id: "$owner._id",
+          username: "$owner.username",
+          fullName: "$owner.fullName"
+        }
+      }
+    },
+
+    // pagination
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [
+          { $skip: skip },
+          { $limit: limit }
+        ]
+      }
+    }
+
+  ]);
+
+  const total = result[0].metadata[0]?.total || 0;
 
   return res.status(200).json(
     new ApiResponse(
       200,
-      { collaborations, page, limit, totalPages: Math.ceil(total / limit) },
+      {
+        collaborations: result[0].data,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        total
+      },
       "Owner collaborations fetched successfully"
     )
   );
