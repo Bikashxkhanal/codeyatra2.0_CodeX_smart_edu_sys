@@ -21,8 +21,10 @@ app.use(
 
 app.use(express.urlencoded({ extended: true, limit: "16kb" })); // for url request like searching, pagination , filtering
 
+//this for keeping the file uploaded in folder : public
+app.use(express.static("public"));
 
 app.use(cookieParser()); // cookies can be set and removed by the server
 
 
-export { app };
+export {app}

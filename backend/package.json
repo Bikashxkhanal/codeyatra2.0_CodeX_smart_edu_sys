@@ -3,15 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
-  "author": "Bikash khanal",
+  "author": "",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "./src/index.js"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14",
-    "prettier": "^3.8.1"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules ./src/index.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
@@ -19,6 +15,7 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "mongodb": "^7.1.0",
-    "mongoose": "^9.2.1"
+    "mongoose": "^9.2.1",
+    "nodemon": "^3.1.14"
   }
 }
