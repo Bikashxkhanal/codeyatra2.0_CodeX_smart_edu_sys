@@ -1,0 +1,29 @@
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+
+const app = express();
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
+
+//configuration are done useng app.use :: use app.use
+app.use(
+  express.json({
+    // for file submmited like photos
+    limit: "30kb",
+  })
+);
+
+app.use(express.urlencoded({ extended: true, limit: "16kb" })); // for url request like searching, pagination , filtering
+
+
+app.use(cookieParser()); // cookies can be set and removed by the server
+
+
+
+export { app };
