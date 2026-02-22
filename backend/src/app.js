@@ -11,6 +11,9 @@ app.use(
   })
 );
 
+// console.log("cors ", process.env.CORS_ORIGIN);
+
+
 //configuration are done useng app.use :: use app.use
 app.use(
   express.json({
@@ -27,8 +30,10 @@ app.use(express.static("public"));
 app.use(cookieParser()); // cookies can be set and removed by the server
 
 import userRouter from "./routes/user.route.js";
+import errorMiddleware from "./middlewares/error.middleware.js";
 
-app.use('api/v1/users', userRouter);
+app.use('/api/v1/users', userRouter);
+app.use(errorMiddleware);
 
 
 export {app}

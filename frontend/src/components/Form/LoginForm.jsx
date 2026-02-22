@@ -25,9 +25,10 @@ const mutation = useMutate(login,
         setCredintials(data);
         navigate('/web/dashboard');
       },
+
       //if error, error should be shown 
-      
         onError : (data ) => {
+          console.log(data);
             setErrors(data);
         }
 
@@ -49,7 +50,7 @@ const mutation = useMutate(login,
     <FormCard title="Welcome Back">
       <form onSubmit={handleSubmit} className="space-y-5">
         {errors && 
-        <p className="py-2 text-red-700">{errors}</p>
+        <p className="py-2 text-red-700">{errors?.message}</p>
         }
         <InputBox
           type="email"

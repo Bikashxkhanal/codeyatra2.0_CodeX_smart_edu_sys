@@ -3,7 +3,7 @@ import { requestInterceptor, responseErrorInterceptor, responseInterceptor } fro
 
 
 const api = axios.create({
-    baseURL : '',
+    baseURL : 'http://localhost:8000',
     withCredentials : true,
     timeout : 10000,
     headers : {"Content-Type" : "application/json"}
