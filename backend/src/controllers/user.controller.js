@@ -7,24 +7,27 @@ const generateAccessandRefreshToken = async (userId) => {
   try {
     const user = await UserModel.findById(userId);
     // console.log(user, "From access and refresh token");
+    // console.log(user);
 
     const accessToken = await user.generateAccessToken();
+   
     const refreshToken = await user.generateRefreshToken();
     user.refreshToken = refreshToken;
+    
     await user.save({ validateBeforeSave: false });
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error(error);
+    
     throw new ApiError(500, "Cannot generate refresh and access token");
   }
 };
 
-
+//only admin can create user
 const registerUser = asyncHandler(async (req, res) => {
   //get user details from frontend
   //validates the details
   //checks all required field are added or not
-  //upload the image in cloudinary
-  //get the url
   //create an user object
   //save the entry in db
   //check the entry
@@ -46,6 +49,9 @@ const registerUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }],
   });
 
+  console.log(existedUser);
+  
+
   if (existedUser) {
     throw new ApiError(409, "User already exist");
   }
@@ -55,7 +61,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
 
-  const user = await UserModel.create({
+    await UserModel.create({
     fullName,
     username: username.toLowerCase(),
     email,
@@ -63,13 +69,10 @@ const registerUser = asyncHandler(async (req, res) => {
     role,
   });
 
-  const createdUser = await UserModel.findById(user._id).select(
-    "-password -refreshToken"
-  );
 
   return res
-    .status(201)
-    .json(new ApiResponse(200, createdUser, "User created successfully"));
+    .status(200)
+    .json(new ApiResponse(200, {}, "User created successfully"));
 });
 
 
@@ -94,7 +97,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await UserModel.findOne({
     email
   });
-  console.log(user);
+
 
   if (!user) {
     throw new ApiError(404, "No user of such detail");
@@ -105,13 +108,20 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credintials");
   }
 
+  console.log(status);
+  
+
   const { accessToken, refreshToken } = await generateAccessandRefreshToken(
     user._id
   );
 
+
   const loggedUser = await UserModel.findById(user._id).select(
     "-password -refreshToken"
   );
+
+  console.log(loggedUser);
+  
 
   const options = {
     httpOnly: true,

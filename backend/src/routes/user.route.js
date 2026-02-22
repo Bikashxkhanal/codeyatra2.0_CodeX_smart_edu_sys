@@ -1,11 +1,18 @@
 import { Router } from "express";
-import { loginUser } from "../controllers/user.controller.js";
-
+import { loginUser, registerUser, getCurrentUser, logoutUser} from "../controllers/user.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const userRouter =new Router();
 
 //route for logging into the system
 userRouter.route('/login').post(loginUser);
+
+//protected routes
+
+userRouter.route('/logout').post(verifyJWT, logoutUser);
+userRouter.route('/register').post( registerUser);
+userRouter.route('/me').get(verifyJWT, getCurrentUser);
+
 
 
 export default userRouter;
