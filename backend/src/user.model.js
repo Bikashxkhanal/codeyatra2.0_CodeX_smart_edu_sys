@@ -28,6 +28,13 @@ const userSchema = new Schema(
       index: true, // to make the searching fast using name
     },
 
+    role : {
+        type : String, 
+        enum : ['student', 'teacher', 'admin'],
+        default : 'student',
+        required : true,
+    },
+
     password: {
       type: String,
       required: [true, "Password is required"],
