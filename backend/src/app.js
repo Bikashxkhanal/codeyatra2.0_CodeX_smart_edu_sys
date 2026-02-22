@@ -33,9 +33,11 @@ app.use(cookieParser()); // cookies can be set and removed by the server
 import userRouter from "./routes/user.route.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import {collaborationRouter} from './routes/collaboration.route.js';
+import { queryRouter } from "./routes/query.route.js";
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/collaborations', collaborationRouter);
+app.use('/api/v1/query', queryRouter);
 app.use(errorMiddleware);
 
 
