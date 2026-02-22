@@ -10,6 +10,7 @@
     "dev": "./src/index.js"
   },
   "devDependencies": {
+    "nodemon": "^3.1.14",
     "prettier": "^3.8.1"
   },
   "dependencies": {

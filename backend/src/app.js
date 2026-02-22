@@ -25,5 +25,4 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" })); // for url reque
 app.use(cookieParser()); // cookies can be set and removed by the server
 
 
-
 export { app };
