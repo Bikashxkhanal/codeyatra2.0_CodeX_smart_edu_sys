@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+
 const app = express();
 
 app.use(
@@ -31,8 +32,10 @@ app.use(cookieParser()); // cookies can be set and removed by the server
 
 import userRouter from "./routes/user.route.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
+import {collaborationRouter} from './routes/collaboration.route.js';
 
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/collaborations', collaborationRouter);
 app.use(errorMiddleware);
 
 
