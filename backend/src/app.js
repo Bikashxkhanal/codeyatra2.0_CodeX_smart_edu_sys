@@ -26,5 +26,9 @@ app.use(express.static("public"));
 
 app.use(cookieParser()); // cookies can be set and removed by the server
 
+import userRouter from "./routes/user.route.js";
+
+app.use('api/v1/users', userRouter);
+
 
 export {app}
