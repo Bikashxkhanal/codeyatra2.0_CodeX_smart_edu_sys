@@ -3,6 +3,7 @@ import DashboardLayout from "../layout/DashboardLayout";
 import { StatCard , FeedCard} from "../components/index.js";
 import { PlusCircle, MessageSquare, Users } from "lucide-react";
 import { mockFeed } from "../data/mockData";
+import { Link } from "react-router-dom";
 
 const UserDashboard = () => {
   return (
@@ -17,14 +18,14 @@ const UserDashboard = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-white border border-indigo-100 text-indigo-600 px-5 py-3 rounded-2xl font-bold shadow-sm hover:bg-indigo-50 transition-all active:scale-95">
+          <Link to="/query/create" className="flex items-center gap-2 bg-white border border-indigo-100 text-indigo-600 px-5 py-3 rounded-2xl font-bold shadow-sm hover:bg-indigo-50 transition-all active:scale-95">
             <PlusCircle size={20} />
             New Query
-          </button>
-          <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
+          </Link>
+          <Link  to='/colaboration/create' className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
             <Users size={20} />
             Start Collaboration
-          </button>
+          </Link>
         </div>
       </div>
 

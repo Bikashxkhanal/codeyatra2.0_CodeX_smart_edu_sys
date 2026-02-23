@@ -36,8 +36,8 @@ import {collaborationRouter} from './routes/collaboration.route.js';
 import { queryRouter } from "./routes/query.route.js";
 
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/collaborations', collaborationRouter);
-app.use('/api/v1/query', queryRouter);
+app.use('/api/v1/collaboration', collaborationRouter);
+app.use('/api/v1/queries', queryRouter);
 app.use(errorMiddleware);
 
 

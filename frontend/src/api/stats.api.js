@@ -7,4 +7,14 @@ const fetchStats = async () => {
  
 };
 
+export const fetchAllQueries = async () => {
+    const res = await api.get("/api/v1/queries/all");
+    return res.data;
+}
+
+export const fetchAllCollaborations = async ( ) => {
+    const res  = await api.get('/api/v1/collaboration/all');
+    return res?.data;
+}
+
 export default fetchStats;

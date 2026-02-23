@@ -28,114 +28,77 @@ const createQuery = asyncHandler(async (req, res) => {
 
 
 const getAllQuery = asyncHandler(async (req, res) => {
-
     let { page = 1, limit = 10, sort = "desc" } = req.query;
 
-    page = parseInt(page);
-    limit = parseInt(limit);
-
-    if (page < 1) page = 1;
-    if (limit < 1) limit = 10;
+    page = Math.max(1, parseInt(page));
+    limit = Math.max(1, parseInt(limit));
 
     const skip = (page - 1) * limit;
     const sortOption = sort === "asc" ? 1 : -1;
 
-    const queries = await QueryModel.aggregate([
-
-        //  Sortring first
+    const result = await QueryModel.aggregate([
+        // 1. Sort by newest first
         { $sort: { createdAt: sortOption } },
 
-        // Lookup Owner of the query
+        // 2. Join with Users collection
         {
             $lookup: {
-                from: "users", // collection name in MongoDB
+                from: "users", // Double check this name in MongoDB Compass
                 localField: "owner",
                 foreignField: "_id",
-                as: "owner"
-            }
-        },
-        { $unwind: "$owner" },
-
-        // Lookup Responses of the query
-        {
-            $lookup: {
-                from: "queryresponses",
-                localField: "_id",
-                foreignField: "query",
-                as: "responses"
+                as: "ownerDetails"
             }
         },
 
-        // looking  Response Owners 
-        {
-            $lookup: {
-                from: "users",
-                localField: "responses.owner",
-                foreignField: "_id",
-                as: "responseOwners"
+        // 3. Convert ownerDetails array to object
+        { 
+            $unwind: {
+                path: "$ownerDetails",
+                preserveNullAndEmptyArrays: true // Prevents query from vanishing if user is deleted
             }
         },
 
-        // Adding response owner details manually
+        // 4. Select only needed fields
         {
-            $addFields: {
-                responses: {
-                    $map: {
-                        input: "$responses",
-                        as: "response",
-                        in: {
-                            _id: "$$response._id",
-                            discription: "$$response.discription",
-                            createdAt: "$$response.createdAt",
-                            owner: {
-                                $arrayElemAt: [
-                                    {
-                                        $filter: {
-                                            input: "$responseOwners",
-                                            as: "ro",
-                                            cond: { $eq: ["$$ro._id", "$$response.owner"] }
-                                        }
-                                    },
-                                    0
-                                ]
-                            }
-                        }
-                    }
+            $project: {
+                title: 1,
+                discription: 1,
+                createdAt: 1,
+                owner: {
+                    fullName: "$ownerDetails.fullName",
+                    username: "$ownerDetails.username",
+                    role: "$ownerDetails.role"
                 }
             }
         },
 
-  
-        {
-            $project: {
-                responseOwners: 0
-            }
-        },
-
-        //for Pagination + Count
+        // 5. Facet for Metadata and Data
         {
             $facet: {
                 metadata: [{ $count: "total" }],
-                data: [
-                    { $skip: skip },
-                    { $limit: limit }
-                ]
+                data: [{ $skip: skip }, { $limit: limit }]
             }
         }
     ]);
 
-    const total = queries[0].metadata[0]?.total || 0;
+    const total = result[0]?.metadata[0]?.total || 0;
+    const queries = result[0]?.data || [];
 
     return res.status(200).json(
-        new ApiResponse(200, {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-            data: queries[0].data
-        }, "All queries fetched successfully")
+        new ApiResponse(
+            200,
+            {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit),
+                queries
+            },
+            "Queries fetched successfully"
+        )
     );
 });
+
 
 const getAllCurrentUserQuery = asyncHandler(async (req, res) => {
 

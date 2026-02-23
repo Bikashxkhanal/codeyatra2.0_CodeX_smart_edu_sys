@@ -72,112 +72,139 @@ const updateCollaboration = asyncHandler(async (req, res) => {
 });
 
 //receives collaboration id from req.params, and returns the collaboration details with author with owner details: username and fullName only
-const getACollaboration = asyncHandler(async (req, res) => {
-  const { id } = req.params;
 
-  const collaboration = await collaborationModel.aggregate([
-    { $match: { _id: new mongoose.Types.ObjectId(id) } },
+// const getACollaboration = asyncHandler(async (req, res) => {
+//   const { id } = req.params;
+
+//   // 1. Validation Guard
+//   // This prevents the BSONError crash by checking the string format first
+//   if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+//     throw new ApiError(400, "Invalid Collaboration ID format");
+//   }
+
+//   const collaboration = await collaborationModel.aggregate([
+//     { 
+//       // Safe to convert now that we validated above
+//       $match: { _id: new mongoose.Types.ObjectId(id) } 
+//     },
+//     {
+//       $lookup: {
+//         from: "users",
+//         localField: "owner",
+//         foreignField: "_id",
+//         as: "ownerDetails",
+//       },
+//     },
+//     { 
+//       // Preserve document even if owner is missing from users collection
+//       $unwind: {
+//         path: "$ownerDetails",
+//         preserveNullAndEmptyArrays: true
+//       } 
+//     },
+//     {
+//       $project: {
+//         title: 1,
+//         discription: 1,
+//         collaborators: 1,
+//         // Flattening the owner structure for a cleaner API response
+//         owner: {
+//           username: "$ownerDetails.username",
+//           fullName: "$ownerDetails.fullName",
+//         },
+//         createdAt: 1,
+//         updatedAt: 1,
+//       },
+//     },
+//   ]);
+
+//   // 2. Result Check
+//   if (!collaboration || collaboration.length === 0) {
+//     throw new ApiError(404, "Collaboration not found");
+//   }
+
+//   return res
+//     .status(200)
+//     .json(new ApiResponse(200, collaboration[0], "Collaboration fetched successfully"));
+// });
+
+
+const getAllCollaboration = asyncHandler(async (req, res) => {
+  let { page = 1, limit = 10 } = req.query;
+
+  page = Math.max(1, parseInt(page));
+  limit = Math.max(1, parseInt(limit));
+  const skip = (page - 1) * limit;
+
+  const result = await collaborationModel.aggregate([
+    // 1. DATA GUARD: Ignore documents with malformed owner IDs to prevent BSONError
+    {
+      $match: {
+        owner: { $type: "objectId" } 
+      }
+    },
+
+    // 2. Sort by latest
+    { $sort: { createdAt: -1 } },
+
+    // 3. Simple Lookup
     {
       $lookup: {
         from: "users",
         localField: "owner",
         foreignField: "_id",
-        as: "ownerDetails",
-      },
-    },
-    { $unwind: "$ownerDetails" },
-    {
-      $project: {
-        title: 1,
-        discription: 1,
-        collaborators: 1,
-        "ownerDetails.username": 1,
-        "ownerDetails.fullName": 1,
-        createdAt: 1,
-        updatedAt: 1,
-      },
-    },
-  ]);
-
-  if (!collaboration.length) throw new ApiError(404, "Collaboration not found");
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, collaboration[0], "Collaboration fetched successfully"));
-});
-
-const getAllCollaboration = asyncHandler(async (req, res) => {
-
-  let { page = 1, limit = 10 } = req.query;
-
-  page = parseInt(page);
-  limit = parseInt(limit);
-
-  if (page < 1) page = 1;
-  if (limit < 1) limit = 10;
-
-  const skip = (page - 1) * limit;
-
-  const result = await collaborationModel.aggregate([
-
-    //sorting latest first
-    { $sort: { createdAt: -1 } },
-
-    
-    {
-      $lookup: {
-        from: "users", // make sure this matches your actual users collection name
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner"
+        as: "ownerDetails"
       }
     },
-    { $unwind: "$owner" },
 
-    //  Selecting  required owner fields only
+    // 4. Flatten the ownerDetails array
+    { 
+      $unwind: {
+        path: "$ownerDetails",
+        preserveNullAndEmptyArrays: true 
+      }
+    },
+
+    // 5. Project ONLY title, description, and owner info
     {
       $project: {
+        _id: 1,
         title: 1,
-        description: 1,
+        discription: 1,
         createdAt: 1,
         owner: {
-          _id: "$owner._id",
-          username: "$owner.username",
-          fullName: "$owner.fullName"
+          fullName: "$ownerDetails.fullName",
+          username: "$ownerDetails.username"
         }
       }
     },
 
-    // Pagination and total count in one query
+    // 6. Pagination
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        data: [
-          { $skip: skip },
-          { $limit: limit }
-        ]
+        data: [{ $skip: skip }, { $limit: limit }]
       }
     }
-
   ]);
 
-  const total = result[0].metadata[0]?.total || 0;
+  const total = result[0]?.metadata[0]?.total || 0;
+  const collaborations = result[0]?.data || [];
 
   return res.status(200).json(
     new ApiResponse(
       200,
       {
-        collaborations: result[0].data,
+        collaborations,
+        total,
         page,
         limit,
         totalPages: Math.ceil(total / limit),
-        total
       },
       "Collaborations fetched successfully"
     )
   );
 });
-
 const getAllOwnerCollaboration = asyncHandler(async (req, res) => {
 
   let { page = 1, limit = 10 } = req.query;
@@ -278,7 +305,7 @@ export {
   createCollaboration,
   deleteCollaborattion,
   updateCollaboration,
-  getACollaboration,
+//   getACollaboration,
   getAllCollaboration,
   getAllOwnerCollaboration,
 };

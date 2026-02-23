@@ -11,8 +11,8 @@ userRouter.route('/login').post(loginUser);
 userRouter.route('/logout').post(verifyJWT, logoutUser);
 userRouter.route('/register').post( registerUser);
 userRouter.route('/me').get(verifyJWT, getCurrentUser);
-userRouter.route('/stats').get( getCounts);
-userRouter.route('/all').get(getAllUser);
+userRouter.route('/stats').get(verifyJWT, getCounts);
+userRouter.route('/all').get(verifyJWT, getAllUser);
 
 
 

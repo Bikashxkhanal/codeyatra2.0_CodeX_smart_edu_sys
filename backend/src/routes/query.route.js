@@ -13,3 +13,5 @@ queryRouter.route('/all').get(verifyJWT, getAllQuery);
 export {
     queryRouter 
 }
+
+// /get/v1/queries/all

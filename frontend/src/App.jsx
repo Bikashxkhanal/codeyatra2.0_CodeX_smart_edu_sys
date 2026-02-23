@@ -11,17 +11,21 @@ import {
   LoginFormPage,
   CollaborationForm,
   ComplaintForm,
+  QueryForm,
 } from "./components/index.js";
 
 import UserPage from "./components/User/UserPage.jsx";
 import UserCreationForm from "./components/User/CreateUser.jsx";
-
+import QueriesPage from "./pages/QueryPage.jsx";
 
 // Create React Query client
 const queryClient = new QueryClient();
 
 import Protected from "./components/ProtectedRoute/ProtectedRoute.jsx";
-// The advanced component we built
+import CollaborationCard from "./components/Card/CollaborationCard.jsx";
+import CollaborationPage from "./pages/CollaborationPage.jsx";
+// import QueriesPage from "./pages/QueryPage.jsx";
+// // The advanced component we built
 
 const router = createBrowserRouter([
   { path: "/", element: <EntryPage /> },
@@ -35,7 +39,8 @@ const router = createBrowserRouter([
       { path: "/dashboard", element: <DashboardSelector /> },
       
       // Feature-specific routes
-      { path: "/collaboration/create", element: <CollaborationForm /> },
+      { path: "/colaboration/create", element: <CollaborationForm /> },
+      {path : "/query/create", element : <QueryForm />}
     ],
   },
 
@@ -45,6 +50,23 @@ const router = createBrowserRouter([
     children: [
       { path: "/users", element: <UserPage /> },
       { path: "/users/create", element: <UserCreationForm /> },
+    ],
+  },
+
+   {
+    element: <Protected allowedRoles={["student", "teacher", "admin"]} />,
+    children: [
+      { path: "/queries", element: <QueriesPage /> },
+   
+    ],
+  },
+
+
+   {
+    element: <Protected allowedRoles={["student", "teacher", "admin"]} />,
+    children: [
+      { path: "/colaboration", element: <CollaborationPage /> },
+   
     ],
   },
 
