@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import LoginForm from './components/Form/LoginForm'
-// import COMPLAINT from './components/Form/Complaint'
-// import NOTICE from './components/Form/Notice'
+
 import QUERY from './components/Form/Query'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import CollaborationForm from './components/Form/Collaboration';
 import {QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import EntryPage from './components/WebInterface/Interface';
+import { RadioGroup , EntryPage, LoginFormPage, CollaborationForm, ComplaintForm} from './components/index.js';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
@@ -16,12 +14,21 @@ const router = createBrowserRouter([
   },
   {
     path : '/login', 
-    element : <LoginForm />
+    element : <LoginFormPage />
   },
 
   {
-    path : '/collaboration' , 
+    path : '/collaboration/create' , 
     element : <CollaborationForm />
+  }, 
+
+  {
+    path : '/complaint/create',
+    element : <ComplaintForm />
+  },
+  {
+    path : '/admin', 
+    element : <AdminDashboard />
   }
 ])
 
