@@ -6,8 +6,10 @@ import useMutate from "../../hooks/useMutate";
 import { login } from "../../api/auth.api";
 import { useNavigate } from "react-router-dom";
 import { setCredintials } from "../../Stores/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function LoginFormPage() {
+  const dispatch  = useDispatch();
   const navigate = useNavigate();
   const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
@@ -17,8 +19,9 @@ export default function LoginFormPage() {
 
   const mutation = useMutate(login, {
     onSuccess: (data) => {
-      setCredintials(data);
-      navigate("/web/dashboard");
+      console.log(data?.data);
+      dispatch(setCredintials(data?.data));
+      navigate("/dashboard");
     },
     onError: (data) => {
       setErrors(data);

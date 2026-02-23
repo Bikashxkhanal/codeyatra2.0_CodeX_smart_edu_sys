@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createQuery, getAllCurrentUserQuery, getAllQuery , addAResponse} from "../controllers/query.controller";
-import { verifyJWT } from "../middlewares/auth.middleware";
+import { createQuery, getAllCurrentUserQuery, getAllQuery , addAResponse} from "../controllers/query.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 
 const queryRouter = new Router();

@@ -2,6 +2,10 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { UserModel } from "../models/user.model.js";
+import { collaborationModel } from "../models/collaboration.model.js";
+import { QueryModel } from "../models/query.model.js";
+import { ComplaintModel } from "../models/complaint.model.js";
+
 
 const generateAccessandRefreshToken = async (userId) => {
   try {
@@ -224,11 +228,120 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 
+const getCounts = asyncHandler(async (req, res) => {
+  try {
+    // Parallel counting for performance
+    const [
+      totalUsers,
+      totalCollaborations,
+      totalQueries,
+      totalComplaints,
+    ] = await Promise.all([
+      UserModel.countDocuments(),
+      collaborationModel.countDocuments(),
+      QueryModel.countDocuments(),
+      ComplaintModel.countDocuments(),
+    ]);
+
+    // Validation check (optional but clean)
+    if (
+      totalUsers === null ||
+      totalCollaborations === null ||
+      totalQueries === null ||
+      totalComplaints === null
+    ) {
+      throw new ApiError(500, "Failed to fetch counts");
+    }
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+         totalUsers,
+        totalCollaborations,
+           totalQueries,
+          totalComplaints,
+        },
+        "Dashboard counts fetched successfully"
+      )
+    );
+  } catch (error) {
+    throw new ApiError(
+      error.statusCode || 500,
+      error.message || "Something went wrong while fetching counts"
+    );
+  }
+});
+
+
+const getAllUser = asyncHandler(async (req, res) => {
+  let { page = 1, limit = 10, query = "" } = req.query;
+
+  page = parseInt(page);
+  limit = parseInt(limit);
+
+  const skip = (page - 1) * limit;
+
+  // Search by name only
+  const matchStage = query
+    ? {
+        name: { $regex: query, $options: "i" },
+      }
+    : {};
+
+  const pipeline = [
+    {
+      $match: matchStage,
+    },
+
+    // ❌ Remove sensitive fields
+    {
+      $project: {
+        password: 0,
+        refreshToken: 0,
+      },
+    },
+
+    {
+      $sort: { createdAt: -1 },
+    },
+
+    {
+      $facet: {
+        data: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [
+          { $count: "count" },
+        ],
+      },
+    },
+  ];
+
+  const result = await UserModel.aggregate(pipeline);
+
+  const users = result[0]?.data || [];
+  const total = result[0]?.totalCount[0]?.count || 0;
+
+  res.status(200).json({
+    success: true,
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    data: users,
+  });
+});
+
+
 export {
     registerUser, 
     loginUser, 
     getCurrentUser,
     logoutUser, 
     refreshAccessToken,
+    getCounts,
+    getAllUser
 
 }

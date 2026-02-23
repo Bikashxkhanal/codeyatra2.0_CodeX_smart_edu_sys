@@ -1,63 +1,90 @@
+import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Users,
   AlertTriangle,
   MessageSquare,
-  Handshake,
-  Bell,
-  Rss,
 } from "lucide-react";
 
-const adminLinks = [
-  { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/admin/users", icon: Users, label: "Users" },
-  { to: "/admin/complaints", icon: AlertTriangle, label: "Complaints" },
-  { to: "/admin/feed", icon: Rss, label: "Feed" },
-];
-
-const userLinks = [
-  { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/dashboard/feed", icon: Rss, label: "Feed" },
+export const navItems = [
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Users",
+    path: "/users",
+    icon: Users,
+  },
+  {
+    label: "Complaints",
+    path: "/complaints",
+    icon: AlertTriangle,
+  },
+  {
+    label: "Queries",
+    path: "/queries",
+    icon: MessageSquare,
+  },
 ];
 
 const Sidebar = () => {
-  const currentUser = {
-    fullName : "Bikash khanal", 
-    role : "admin"
-  }
   const location = useLocation();
 
-  const isAdmin = currentUser?.role === "admin";
-  const links = isAdmin ? adminLinks : userLinks;
-
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-white shadow-md p-6">
-      <h2 className="text-xl font-bold mb-8 text-blue-600">
-        {isAdmin ? "Admin Panel" : "User Panel"}
-      </h2>
+    <>
+      {/* 🖥 Desktop Sidebar */}
+      <div className="hidden md:flex flex-col w-64 h-screen bg-white shadow-lg fixed left-0 top-0 p-4">
+        <h2 className="text-xl font-bold mb-6">Admin</h2>
 
-      <nav className="space-y-2">
-        {links.map(({ to, icon: Icon, label }) => {
-          const isActive = location.pathname === to;
+        <div className="flex flex-col gap-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-3 p-3 rounded-lg transition ${
+                  isActive
+                    ? "bg-blue-100 text-blue-600"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                <Icon size={20} />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 📱 Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-inner border-t flex justify-around py-2 z-50">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.path;
 
           return (
             <NavLink
-              key={to}
-              to={to}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition ${
+              key={item.path}
+              to={item.path}
+              className={`flex flex-col items-center text-xs ${
                 isActive
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-600 hover:bg-blue-100"
+                  ? "text-blue-600"
+                  : "text-gray-500"
               }`}
             >
-              <Icon size={18} />
-              {label}
+              <Icon size={22} />
             </NavLink>
           );
         })}
-      </nav>
-    </aside>
+      </div>
+    </>
   );
 };
 
