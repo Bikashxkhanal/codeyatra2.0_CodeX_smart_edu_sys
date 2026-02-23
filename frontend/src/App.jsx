@@ -16,6 +16,8 @@ import {
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import UserPage from "./components/User/UserPage.jsx";
 import UserCreationForm from "./components/User/CreateUser.jsx";
+import { useEffect } from "react";
+import UserDashboard from "./pages/UserDashboard.jsx";
 
 // Create React Query client
 const queryClient = new QueryClient();
@@ -28,12 +30,13 @@ const router = createBrowserRouter([
   { path: "/complaint/create", element: <ComplaintForm /> },
   { path: "/dashboard", element: <AdminDashboard /> },
   { path: "/users", element: <UserPage /> },
-  { path: "/users/create", element: <UserCreationForm /> },
+  { path: "/users/create", element: <UserCreationForm /> }, 
+  {path : "/dashboard/user", element : <UserDashboard />},
 ]);
 
 function App() {
+ 
   return (
-   
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />

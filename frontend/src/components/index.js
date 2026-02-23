@@ -7,7 +7,7 @@ import NoticeForm from "./Form/Notice";
 import QueryForm from "./Form/Query";
 
 import Input from "./InputBox/InputBox";
-import NoticeCard from "./NoticeCard/NoticeCard";
+import NoticeCard from "./Card/NoticeCard";
 import RadioGroup from "./RadioGroup/RadioGroup";
 import TextArea from "./TextArea/TextArea";
 import EntryPage from "./WebInterface/Interface";
