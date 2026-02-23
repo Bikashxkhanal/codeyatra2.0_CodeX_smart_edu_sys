@@ -24,7 +24,8 @@ export default function QueryForm() {
   };
 
   return (
-    <FormCard title="Ask a Query">
+    <div className="form-page-bg flex items-center">
+      <FormCard title="Ask a Query" className="w-full max-w-3xl">
       <form onSubmit={handleSubmit} className="space-y-5">
 
         <InputBox
@@ -49,5 +50,6 @@ export default function QueryForm() {
         </Button>
       </form>
     </FormCard>
+    </div>
   );
 }

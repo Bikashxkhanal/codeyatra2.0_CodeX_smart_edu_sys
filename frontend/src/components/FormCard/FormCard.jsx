@@ -1,10 +1,10 @@
 export default function FormCard({ title, children, className = "" }) {
   return (
     <div
-      className={`max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg ${className}`}
+      className={`form-shell max-w-2xl mx-auto p-8 ${className}`}
     >
       {title && (
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">{title}</h2>
+        <h2 className="mb-6 text-2xl font-bold text-slate-800">{title}</h2>
       )}
       {children}
     </div>

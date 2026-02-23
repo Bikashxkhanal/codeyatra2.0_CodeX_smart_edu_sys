@@ -8,11 +8,11 @@ const sizeStyles = {
 
 const variantStyles = {
   default:
-    "border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+    "elevated-input border focus:ring-2",
   outline:
-    "border-2 border-gray-400 bg-transparent focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+    "border-2 border-slate-300 bg-transparent focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
   ghost:
-    "border border-transparent bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:bg-white",
+    "border border-transparent bg-slate-100 focus:ring-2 focus:ring-blue-500 focus:bg-white",
 };
 
 const Input = forwardRef(
@@ -45,7 +45,7 @@ const Input = forwardRef(
       : "";
 
     const disabledClass = disabled
-      ? "bg-gray-100 cursor-not-allowed opacity-70"
+      ? "bg-slate-100 cursor-not-allowed opacity-70"
       : "";
 
     const paddingLeft = leftIcon ? "pl-10" : "";
@@ -69,14 +69,14 @@ const Input = forwardRef(
         } ${containerClassName}`}
       >
         {label && (
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium text-slate-700">
             {label}
           </label>
         )}
 
         <div className="relative flex items-center">
           {leftIcon && (
-            <span className="absolute left-3 text-gray-400">
+            <span className="absolute left-3 text-slate-400">
               {leftIcon}
             </span>
           )}
@@ -90,7 +90,7 @@ const Input = forwardRef(
           />
 
           {rightIcon && (
-            <span className="absolute right-3 text-gray-400">
+            <span className="absolute right-3 text-slate-400">
               {rightIcon}
             </span>
           )}
@@ -100,7 +100,7 @@ const Input = forwardRef(
           <p className="text-sm text-red-500">{error}</p>
         ) : (
           helperText && (
-            <p className="text-sm text-gray-500">{helperText}</p>
+            <p className="text-sm text-slate-500">{helperText}</p>
           )
         )}
       </div>

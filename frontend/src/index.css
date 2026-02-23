@@ -1,1 +1,87 @@
 @import "tailwindcss";
+
+:root {
+  --bg: #f3f7fb;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #475569;
+  --brand-1: #0ea5a4;
+  --brand-2: #2563eb;
+  --accent: #f59e0b;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 0% 0%, rgb(14 165 164 / 0.12), transparent 40%),
+    radial-gradient(circle at 100% 0%, rgb(37 99 235 / 0.12), transparent 35%),
+    linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+}
+
+@layer components {
+  .glass-nav {
+    @apply sticky top-4 z-50 mx-auto flex w-[min(1100px,92%)] items-center justify-between rounded-2xl border border-white/60 bg-white/70 px-5 py-4 shadow-lg shadow-slate-900/5 backdrop-blur-xl;
+  }
+
+  .brand-mark {
+    @apply bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent;
+  }
+
+  .cta-btn {
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-md shadow-blue-400/20 transition hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400;
+  }
+
+  .hero-wrap {
+    @apply mx-auto grid w-[min(1100px,92%)] gap-10 pb-12 pt-16 md:grid-cols-[1.15fr_0.85fr] md:items-center md:pb-16 md:pt-20;
+  }
+
+  .hero-card {
+    @apply rounded-3xl border border-white/70 bg-white/80 p-8 shadow-xl shadow-slate-900/5 backdrop-blur md:p-10;
+  }
+
+  .feature-grid {
+    @apply mx-auto grid w-[min(1100px,92%)] gap-6 pb-20 md:grid-cols-3;
+  }
+
+  .feature-card {
+    @apply rounded-2xl border border-slate-200/70 bg-white p-7 shadow-md shadow-slate-900/5 transition duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .form-page-bg {
+    @apply min-h-screen px-4 py-10 md:px-8;
+    background:
+      radial-gradient(circle at 20% 10%, rgb(14 165 164 / 0.12), transparent 40%),
+      radial-gradient(circle at 80% 20%, rgb(37 99 235 / 0.12), transparent 35%),
+      linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  }
+
+  .form-shell {
+    @apply rounded-3xl border border-white/70 bg-white/85 shadow-2xl shadow-slate-900/8 backdrop-blur;
+  }
+
+  .form-title {
+    @apply bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent;
+  }
+
+  .elevated-input {
+    @apply rounded-xl border-slate-200 bg-white/90 shadow-sm shadow-slate-900/5 transition focus:border-blue-400 focus:ring-blue-400;
+  }
+
+  .elevated-textarea {
+    @apply rounded-xl border-slate-200 bg-white/90 shadow-sm shadow-slate-900/5 transition focus:border-blue-400 focus:ring-blue-400;
+  }
+
+  .btn-modern {
+    @apply bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-md shadow-blue-400/25 hover:from-teal-600 hover:to-blue-700;
+  }
+
+  .btn-modern-muted {
+    @apply border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50;
+  }
+}

@@ -25,7 +25,8 @@ export default function CollaborationForm() {
   };
 
   return (
-    <FormCard title="Collaboration Request">
+    <div className="form-page-bg flex items-center">
+      <FormCard title="Collaboration Request" className="w-full max-w-3xl">
       <form onSubmit={handleSubmit} className="space-y-5">
 
         <InputBox
@@ -49,5 +50,6 @@ export default function CollaborationForm() {
         </Button>
       </form>
     </FormCard>
+    </div>
   );
 }

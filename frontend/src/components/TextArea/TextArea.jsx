@@ -17,7 +17,7 @@ const TextArea = forwardRef(
     return (
       <div className="flex flex-col gap-1 w-full">
         {label && (
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium text-slate-700">
             {label}
           </label>
         )}
@@ -29,7 +29,7 @@ const TextArea = forwardRef(
           onChange={onChange}
           rows={rows}
           required={required}
-          className={`w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none ${className}`}
+          className={`elevated-textarea w-full border px-4 py-3 outline-none focus:ring-2 ${className}`}
           {...props}
         />
       </div>

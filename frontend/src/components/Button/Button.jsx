@@ -19,7 +19,7 @@ export default function Button({
 
   const variantStyles = {
     login:
-      "w-full bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-md",
+      "btn-modern w-full focus:ring-blue-500",
     delete:
       "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-md",
     create:
@@ -27,9 +27,9 @@ export default function Button({
     update:
       "bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-400 shadow-md",
     secondary:
-      "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400",
+      "btn-modern-muted focus:ring-slate-400",
     primary:
-      "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 shadow-md",
+      "btn-modern focus:ring-blue-500",
   };
 
   return (

@@ -21,50 +21,59 @@ const EntryPage = () => {
   ];
 
   return (
-    <div className="font-sans text-gray-900">
-      {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-6 bg-gradient-to-r from-indigo-100 to-sky-100 shadow-md sticky top-0 z-50">
-        <div className="text-2xl font-bold text-indigo-700">CollabEd</div>
-        <Link to="/login" className="px-6 py-2 bg-indigo-700 text-white font-semibold rounded-lg hover:bg-purple-500 transition">
+    <div className="text-slate-900">
+      <header className="glass-nav">
+        <div className="brand-mark">CollabEd</div>
+        <Link to="/login" className="cta-btn !px-5 !py-2.5">
           Login
         </Link>
       </header>
 
-      {/* Hero Section */}
-      <section className="flex flex-col justify-center items-center text-center py-32 px-6 bg-gradient-to-r from-indigo-500 to-sky-500 text-white">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
-          Collaborate. Learn. Solve.
-        </h1>
-        <p className="max-w-2xl text-lg md:text-xl mb-8 drop-shadow-sm">
-          CollabEd allows students and teachers to raise collaboration requests, answer queries,
-          and work together to enhance learning and engagement.
-        </p>
-        <a
-          href="#"
-          className="px-8 py-3 bg-white text-indigo-700 font-semibold rounded-full shadow-md hover:bg-purple-500 hover:text-white transition"
-        >
-          Get Started
-        </a>
+      <section className="hero-wrap">
+        <div>
+          <h1 className="mb-4 text-4xl font-black leading-tight tracking-tight text-slate-900 md:text-6xl">
+            Collaborate faster,
+            <span className="bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent">
+              {" "}learn smarter.
+            </span>
+          </h1>
+          <p className="mb-8 max-w-2xl text-base text-slate-600 md:text-lg">
+            CollabEd helps students and teachers raise requests, solve academic questions,
+            and manage learning conversations in one focused workspace.
+          </p>
+          <Link to="/login" className="cta-btn">
+            Get Started
+          </Link>
+        </div>
+
+        <div className="hero-card">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Unified Learning Hub
+          </p>
+          <h2 className="mb-4 text-2xl font-bold text-slate-900">Ask, build, and solve together</h2>
+          <p className="text-slate-600">
+            Organize discussion threads, submit collaboration proposals, and get guided support
+            without switching between fragmented tools.
+          </p>
+        </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-6 bg-indigo-100 flex flex-wrap justify-center gap-10">
+      <section className="feature-grid">
         {features.map((feature, idx) => (
           <div
             key={idx}
-            className="bg-white rounded-3xl p-8 w-64 text-center shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300"
+            className="feature-card text-center"
           >
-            <div className="bg-indigo-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-teal-50">
               <img src={feature.icon} alt={feature.title} className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-semibold text-indigo-700 mb-2">{feature.title}</h3>
-            <p className="text-gray-600 text-sm">{feature.description}</p>
+            <h3 className="mb-2 text-xl font-semibold text-slate-900">{feature.title}</h3>
+            <p className="text-sm text-slate-600">{feature.description}</p>
           </div>
         ))}
       </section>
 
-      {/* Footer */}
-      <footer className="bg-indigo-700 text-white text-center py-6 mt-12">
+      <footer className="mt-6 border-t border-slate-200/80 bg-white/70 py-6 text-center text-slate-600">
         <p>&copy; 2026 CollabEd. All rights reserved.</p>
       </footer>
     </div>
