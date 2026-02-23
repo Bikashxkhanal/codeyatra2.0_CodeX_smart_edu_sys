@@ -70,4 +70,4 @@ const Sidebar = ({ closeSidebar }) => {
     </div>
   );
 };
-export default Sidebar;
+export default Sidebar; 

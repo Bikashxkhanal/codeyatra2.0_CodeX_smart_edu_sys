@@ -216,12 +216,22 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+  // Find the user by ID and exclude sensitive/unnecessary fields
+  // .select("-field") excludes that specific field from the result
+  const user = await UserModel.findById(req.user?._id).select(
+    "-password -refreshToken -createdAt -updatedAt -__v"
+  );
+
+  if (!user) {
+    throw new ApiError(404, "User does not exist");
+  }
+
   return res
     .status(200)
     .json(
       new ApiResponse(
-        200,
-        { userId: req?.user?._id },
+        200, 
+        user, // Sending the full user object (minus excluded fields)
         "User retrieved successfully"
       )
     );

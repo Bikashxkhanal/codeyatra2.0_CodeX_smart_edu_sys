@@ -23,6 +23,9 @@ export const fetchUserInfo = async () => {
 }
 
 export const verifyAuth = async () => {
-    return await api.get('/api/v1/users/me');
+    const res=  await api.get('/api/v1/users/me');
+    console.log(res);
+    return res;
+    
     
 }
